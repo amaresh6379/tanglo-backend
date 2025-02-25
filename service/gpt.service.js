@@ -1,7 +1,4 @@
-// const OpenAI = require('openai');
-// const openai = new OpenAI({
-//   apiKey: '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' // Replace with your actual API key
-// });
+
 // const fs = require('fs');
 // const axios = require('axios');
 // const getConveration = async () => {
@@ -67,10 +64,6 @@
 
 // // import OpenAI from "openai";
 
-// const openDeepSeek = new OpenAI({
-//   baseURL: 'https://api.deepseek.com',
-//   apiKey: 'sk-91329c706444454599896262c363ad71'
-// });
 
 
 
