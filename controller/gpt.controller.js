@@ -4,12 +4,12 @@ const MSG = require('../msg').MSG;
 /**
  * Function used to make converstion with gemini.
  */
-const conversationWithGemini = async function (req, res) {
-  const [err, data] = await to(GptService.conversationWithGpt(req));
+const conversationWithGpt = async function (req, res) {
+  const [err, data] = await to(GptService.getConveration(req));
   if (err) {
     return ReE(res, Object.assign(MSG.CREATE_USER_FAILED, { details: err.message }), 422);
   }
-  return ReS(res, { userToken: data, code: 200, message: MSG.CREATE_USER_SUCCESS.message }, 200);
+  return ReS(res, { data: data, code: 200, message: MSG.CREATE_USER_SUCCESS.message }, 200);
 }
 /**
  * Function used to make converstion with gemini.
@@ -24,7 +24,7 @@ const converstionWithDeepSeek = async function (req, res) {
   return ReS(res, { userToken: data, code: 200, message: MSG.CREATE_USER_SUCCESS.message }, 200);
 }
 router.get('/deepseek', converstionWithDeepSeek);
-router.get('/', conversationWithGemini);
+router.post('/', conversationWithGpt);
 
 
-module.exports = { router, conversationWithGemini, converstionWithDeepSeek };
+module.exports = { router, converstionWithDeepSeek };
