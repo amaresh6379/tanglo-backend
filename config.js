@@ -24,6 +24,9 @@ CONFIG.max_pool_connection = 10;
 CONFIG.client_id = process.env.GOOGLE_CLIENT_ID;
 
 
+CONFIG.GPT_KEY = process.env.GPT_KEY;
+
+
 // Bucket Name
 CONFIG.S3_BUCKET_NAME = process.env.S3_BUCKET_NAME;
 
