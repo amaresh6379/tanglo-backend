@@ -26,6 +26,8 @@
     "passport-jwt": "^4.0.1",
     "pg": "^8.13.1",
     "razorpay": "^2.9.5",
-    "sequelize": "^6.37.5"
+    "sequelize": "^6.37.5",
+    "node-cron": "^3.0.3"
+
   }
 }
