@@ -10,8 +10,6 @@ const client = new OpenAI({
 const getConveration = async (req) => {
   const answer = req?.body?.answer;
   const question = req?.body?.question;
-  console.log("answer", answer);
-  console.log("question", question);
   const completion = await client.chat.completions.create({
     model: "gpt-4-turbo",
     messages: [
@@ -68,8 +66,6 @@ const getConveration = async (req) => {
     nextQuestion: data?.next_question,
   }
 
-
-  console.log(completion.choices[0].message);
 
 }
 
