@@ -10,40 +10,44 @@ const client = new OpenAI({
 const getConveration = async (req) => {
   const answer = req?.body?.answer;
   const question = req?.body?.question;
+  console.log("answer", answer);
+  console.log("question", question);
   const completion = await client.chat.completions.create({
     model: "gpt-4-turbo",
     messages: [
       {
         role: "system",
         content: `You are a Tanglish chat expert.
-        When a user sends a message:
-        1. **Correct the Tanglish spelling:**
-          - Focus only on Tanglish spelling errors.
-          - Ignore English grammar and capitalization.
-          - Highlight and fix mistakes with a short correction note.
-          - Add an encouraging comment after correcting.
-
-        2. **Ask a fun, context-aware follow-up question in Tanglish:**
-          - Analyze both the **previous question and the user's response** to maintain context.
-          - Ensure the follow-up question flows naturally based on the user's last response.
-          - Avoid generic or irrelevant questions.
-          - Add emojis to make it lively.
-
-        3. **Return the response strictly in this JSON format:**
-        {
-          "correction": "<Corrected Tanglish sentence>",
-          "mistake_explanation": "<Incorrect word> -> <Corrected word> - <Tanglish la simple explanation>",
-          "next_question": "<Context-aware follow-up question>"
-        }`
+            When a user sends a message:
+            1. **Correct the Tanglish spelling:**
+              - Focus only on Tanglish spelling errors.
+              - Ignore English grammar and capitalization.
+              - Highlight and fix mistakes Dont need any correction notes For example just need this picha -> pidicha  dont add extra sentence.
+              - Add an encouraging comment after correcting.
+    
+            2. **Ask a fun and joke, context-aware follow-up question in Tanglish (use chennai slang)**
+              - Analyze both the **previous question and the user's response** to maintain context.
+              - Ensure the follow-up question flows naturally based on the user's last response.
+              - Avoid generic or irrelevant questions.
+              - Add emojis to make it lively.
+              - It should feel like friend typing an tanglish message.
+    
+            3. **Return the response strictly in this JSON format:**
+            {
+              "correction": "<Corrected Tanglish sentence>",
+              "mistake_explanation": "<Incorrect word> -> <Corrected word> - <Tanglish la simple explanation>",
+              "next_question": "<Context-aware follow-up question>"
+            }`
       },
       {
         role: "user",
         content: answer,
         previousQuestion: question
       }
-    ]
-  });
-
+    ],
+    "temperature": 0.4,
+    "max_tokens": 200
+  })
 
 
   // Extract and log response
@@ -52,7 +56,14 @@ const getConveration = async (req) => {
   const data = JSON.parse(responseText);
 
   return {
-    correctedAnswer: data?.correction.split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" "),
+    correctedAnswer: data?.correction.split(" ").map((word, index) => {
+      if (index == 0) {
+        return word.charAt(0).toUpperCase() + word.slice(1)
+      }
+      else {
+        return word
+      }
+    }).join(" "),
     mistakes: data?.mistake_explanation,
     nextQuestion: data?.next_question,
   }
