@@ -8,50 +8,42 @@ const client = new OpenAI({
 });
 
 const getConveration = async (req) => {
-  const answer = req?.body?.answer;
+
   const question = req?.body?.question;
+  let answer = "question asked :" + question + " answer :" + req?.body?.answer;
   const completion = await client.chat.completions.create({
-    model: "gpt-4-turbo",
+    model: "gpt-4o",
     messages: [
       {
         role: "system",
-        content: `You are a Tanglish chat expert.
-            When a user sends a message:
-            1. **Correct the Tanglish spelling:**
-              - Focus only on Tanglish spelling errors.
-              - Ignore English grammar and capitalization.
-              - Highlight and fix mistakes Dont need any correction notes For example just need this picha -> pidicha  dont add extra sentence.
-              - Add an encouraging comment after correcting.
-    
-            2. **Ask a fun and joke, context-aware follow-up question in Tanglish (use chennai slang)**
-              - Analyze both the **previous question and the user's response** to maintain context.
-              - Ensure the follow-up question flows naturally based on the user's last response.
-              - Avoid generic or irrelevant questions.
-              - Add emojis to make it lively.
-              - It should feel like friend typing an tanglish message.
-    
-            3. **Return the response strictly in this JSON format:**
-            {
-              "correction": "<Corrected Tanglish sentence>",
-              "mistake_explanation": "<Incorrect word> -> <Corrected word> - <Tanglish la simple explanation>",
-              "next_question": "<Context-aware follow-up question>"
-            }`
+        content: `You are a Tanglish chat expert. Correct Tanglish spelling and ask a fun follow-up question in Tanglish.
+          
+          1. **Correct the tanglish spelling only for answer not for questions asked. If there is no tanglish mistakes in the answer sentence no need to provide it.  Dont focus on english grammer or captilization.Return mistakes format: "incorrect -> correct".
+          2. **Ask follow-up question:** Fun and context-aware.
+          3. **Return strictly valid JSON with no markdown or backticks. Use this format:**
+          {
+            "correction": "<Corrected Tanglish sentence>",
+            "mistake_explanation": "<Incorrect word> -> <Corrected word>",
+            "next_question": "<Context-aware follow-up question>"
+          }`
       },
       {
         role: "user",
-        content: answer,
-        previousQuestion: question
+        content: answer
       }
     ],
-    "temperature": 0.4,
-    "max_tokens": 200
-  })
+    "temperature": 0.3,
+    "max_tokens": 120
+  });
+
+
 
 
   // Extract and log response
   const responseText = completion.choices[0]?.message?.content || "No response received";
   console.log("Bot's Question:", JSON.stringify(responseText));
-  const data = JSON.parse(responseText);
+  let data = JSON.parse(responseText);
+
 
   return {
     correctedAnswer: data?.correction.split(" ").map((word, index) => {
